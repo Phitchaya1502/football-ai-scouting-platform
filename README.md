@@ -9,10 +9,10 @@ This platform helps evaluate player performance using key metrics such as goals,
 # 🌐 Live Demo
 
 Frontend 
-https://football-ai-scouting-platform.vercel.app/
+https://football-ai-scouting-platform.vercel.app
 
 Backend
-https://football-ai-scouting-platform.onrender.com/
+https://football-ai-scouting-platform.onrender.com
 
 ---
 
@@ -229,7 +229,10 @@ The system provides:
 ---
 
 # 👨‍💻 Author
-
+Phitchaya Chanavong 116610905021-9
+Tadthep Ruangphon 116610905027-6
+Pittayut
+Pattarapong
 Student Project  
 Artificial Intelligence / Data Mining Course
 

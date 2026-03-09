@@ -8,7 +8,11 @@ This platform helps evaluate player performance using key metrics such as goals,
 
 # 🌐 Live Demo
 
-Coming soon (Deployment in progress)
+Frontend 
+https://football-ai-scouting-platform.vercel.app/
+
+Backend 
+https://football-ai-scouting-platform.onrender.com/
 
 ---
 

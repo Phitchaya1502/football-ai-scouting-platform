@@ -11,7 +11,7 @@ This platform helps evaluate player performance using key metrics such as goals,
 Frontend 
 https://football-ai-scouting-platform.vercel.app/
 
-Backend 
+Backend
 https://football-ai-scouting-platform.onrender.com/
 
 ---

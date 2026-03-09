@@ -829,14 +829,24 @@ class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             btn.disabled = true;
             btn.innerHTML = '<span class="flex items-center justify-center gap-2"><svg class="animate-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="32"/></svg>Processing...</span>';
 
-            const playerData = {
-                name: document.getElementById('playerName').value,
-                position: document.getElementById('position').value,
-                goals: parseInt(document.getElementById('goals').value),
-                assists: parseInt(document.getElementById('assists').value),
-                passes: parseInt(document.getElementById('passes').value),
-                rating: parseFloat(document.getElementById('rating').value)
-            };
+           const playerData = {
+name: document.getElementById('playerName').value,
+position: document.getElementById('position').value,
+goals: parseInt(document.getElementById('goals').value),
+assists: parseInt(document.getElementById('assists').value),
+passes: parseInt(document.getElementById('passes').value),
+rating: parseFloat(document.getElementById('rating').value)
+}
+
+if(playerData.goals > 50){
+showToast("error","Invalid Data","Goals value seems unrealistic")
+return
+}
+
+if(playerData.rating > 10){
+showToast("error","Invalid Data","Rating must be between 0-10")
+return
+}
 
             try {
                 const response = await fetch(`${API_BASE}/submit-player`, {
@@ -890,16 +900,71 @@ class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             if (score >= 12) return "Consider";
             return "Monitor";
         }
+function showResult(name, score, recommendation){
 
+const panel = document.getElementById("resultPanel")
+
+panel.classList.remove("hidden")
+
+panel.innerHTML = `
+<div class="flex items-center justify-between mb-4">
+
+<div>
+<div class="text-sm text-gray-400">AI Score</div>
+<div class="score-value">${score}</div>
+</div>
+
+<div class="stat-badge">
+${recommendation}
+</div>
+
+</div>
+
+<div class="text-sm text-gray-400">
+Player: <span class="text-white">${name}</span>
+</div>
+
+<div class="mt-4 flex gap-3">
+
+<button onclick="submitFeedback('approve')"
+class="px-4 py-2 rounded-lg bg-green-500/20 text-green-400">
+Approve
+</button>
+
+<button onclick="submitFeedback('reject')"
+class="px-4 py-2 rounded-lg bg-red-500/20 text-red-400">
+Reject
+</button>
+
+</div>
+
+<p class="text-xs mt-2 text-gray-400">
+AI recommendation is for scouting support only.
+</p>
+`
+}
         // Show result panel
-        function showResult(name, score, recommendation) {
-            const panel = document.getElementById('resultPanel');
-            document.getElementById('aiScore').textContent = score;
-            document.getElementById('recommendation').textContent = recommendation;
-            document.getElementById('resultPlayerName').textContent = name;
-            panel.classList.remove('hidden');
-            panel.style.animation = 'fadeInUp 0.4s ease forwards';
-        }
+        async function submitFeedback(type){
+
+try{
+
+await fetch(`${API_BASE}/feedback`,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+decision:type
+})
+})
+
+showToast("success","Feedback saved","Scout feedback recorded")
+
+}catch(e){
+
+showToast("error","Error","Failed to send feedback")
+
+}
+
+}
 
         // Fetch players from API
         async function fetchPlayers() {
@@ -1201,7 +1266,19 @@ data.accuracy + "%"
 console.log("Model info load failed")
 
 }
+async function submitFeedback(type){
 
+await fetch(`${API_BASE}/feedback`,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+decision:type
+})
+})
+
+showToast("success","Feedback saved","Scout feedback recorded")
+
+}
 }
         // Initialize chart button states
         document.addEventListener('DOMContentLoaded', function() {

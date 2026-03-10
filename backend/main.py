@@ -67,6 +67,59 @@ def model_info():
     }
 app.mount("/static", StaticFiles(directory="../frontend"), name="static")
 
+@app.get("/player/{player_id}")
+def get_player(player_id: int, db: Session = Depends(get_db)):
+
+    player = db.query(models.Player).filter(models.Player.id == player_id).first()
+
+    if not player:
+        return {"error": "Player not found"}
+
+    return player
+
+@app.put("/player/{player_id}")
+def update_player(player_id: int, player: schemas.PlayerCreate, db: Session = Depends(get_db)):
+
+    db_player = db.query(models.Player).filter(models.Player.id == player_id).first()
+
+    if not db_player:
+        return {"error": "Player not found"}
+
+    db_player.name = player.name
+    db_player.position = player.position
+    db_player.goals = player.goals
+    db_player.assists = player.assists
+    db_player.passes = player.passes
+    db_player.rating = player.rating
+
+    score, rec = analyze_player(
+        player.goals,
+        player.assists,
+        player.passes,
+        player.rating
+    )
+
+    db_player.ai_score = score
+    db_player.recommendation = rec
+
+    db.commit()
+    db.refresh(db_player)
+
+    return db_player
+
+@app.delete("/player/{player_id}")
+def delete_player(player_id: int, db: Session = Depends(get_db)):
+
+    player = db.query(models.Player).filter(models.Player.id == player_id).first()
+
+    if not player:
+        return {"error": "Player not found"}
+
+    db.delete(player)
+    db.commit()
+
+    return {"message": "Player deleted"}
+
 @app.get("/")
 def root():
     return FileResponse("../frontend/index.html")

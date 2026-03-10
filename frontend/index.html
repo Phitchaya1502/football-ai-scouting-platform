@@ -799,12 +799,16 @@ class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
 
         // Initialize on DOM ready
         document.addEventListener('DOMContentLoaded', function() {
-            initChart();
-            fetchPlayers();
-            setupForm();
-            setupIntersectionObserver();
-            loadModelInsight();
-        });
+    initChart();
+
+    setTimeout(() => {
+        fetchPlayers();
+    }, 2000);
+
+    setupForm();
+    setupIntersectionObserver();
+    loadModelInsight();
+});
 
         // Mobile menu toggle
         function toggleMobileMenu() {
@@ -987,9 +991,13 @@ throw new Error("API request failed")
 
 } catch(error){
 
-renderPlayers(DEMO_PLAYERS)
-updateChart(DEMO_PLAYERS)
-updateStats(DEMO_PLAYERS)  // ⭐ เพิ่มตรงนี้ด้วย
+console.log("API error", error)
+
+showToast(
+"error",
+"Server sleeping",
+"Backend is starting, please wait a moment"
+)
 
 }
 
